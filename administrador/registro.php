@@ -20,7 +20,7 @@ if ($varsesion == null || $varsesion = '') {
 </head>
 
 <body>
-    <h1>hola mundo</h1>
+    <h1>hola admin</h1>
 
 </body>
 
