@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION["nombre"] = $nombre;
 
             if ($id_cargo == 1) {
-                header("location: /paginawebrestaurante/administrador/registro.php");
+                header("location: /paginawebrestaurante/administrador/inicio.php");
             } elseif ($id_cargo == 2) {
                 header("location: /paginawebrestaurante/trabajadores/camarero.php");
             } elseif ($id_cargo == 3) {
