@@ -5,34 +5,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = md5($_POST["passw"]);
 
     // Conexión a la base de datos
-    $host = "localhost";
-    $port = "5432";
-    $dbname = "restaurante";
-    $user = "postgres";
-    $password_db = "Alberto321";
-    
-    $conexion = pg_connect("host=$host port=$port dbname=$dbname user=$user password=$password_db");
+    $conexion = mysqli_connect("localhost", "root", "", "restaurante");
 
     // Verificar la conexión
     if (!$conexion) {
-        die("La conexión ha fallado: " . pg_last_error());
+        die("La conexión ha fallado: " . mysqli_connect_error());
     }
 
-    // Consulta SQL para buscar el usuario (con uso de consulta preparada)
-    $query = "SELECT * FROM usuarios WHERE nombre = $1";
-    $result = pg_query_params($conexion, $query, array($usuario));
+    // Consulta SQL para buscar el usuario
+    $sql = "SELECT * FROM usuarios WHERE nombre = '$usuario'";
+    // Ejecutar la consulta
+    $resultado = mysqli_query($conexion, $sql);
 
     // Comprobar si el usuario existe en la base de datos
-    if (pg_num_rows($result) > 0) {
+    if (mysqli_num_rows($resultado) > 0) {
         // Obtener los datos del usuario
-        $fila = pg_fetch_assoc($result);
+        $fila = mysqli_fetch_assoc($resultado);
         $nombre = $fila["nombre"];
-        $hashedPassword = $fila["contrasena"];
+        $password = $fila["contrasena"];
         $idusuario = $fila["id"];
         $id_cargo = $fila["rol"]; // Agregamos el campo del cargo del usuario
 
         // Comprobar si la contraseña es correcta
-        if ($hashedPassword == $password) {
+        if ($password == $password) {
             // Iniciar sesión y redireccionar al usuario según su cargo
             session_start();
             $_SESSION["idusuario"] = $idusuario;
@@ -58,6 +53,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Cerrar la conexión
-    pg_close($conexion);
+    mysqli_close($conexion);
 }
 ?>
