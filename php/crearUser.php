@@ -10,10 +10,11 @@ if (!$conexion) {
 
 // Recoger los valores del formulario HTML
 $nombre = $_POST['nombre'];
+$apellido = $_POST['apellido'];
 $contrasena = md5($_POST["passw"]);
 $rol = $_POST['rol'];
 // Crear la consulta SQL para insertar un nuevo usuario en la tabla "usuarios"
-$sql = "INSERT INTO usuarios (nombre, contrasena, rol) VALUES ('$nombre','$contrasena','$rol')";
+$sql = "INSERT INTO usuarios (nombre, apellido, contrasena, rol) VALUES ('$nombre','$apellido','$contrasena','$rol')";
 
 // Ejecutar la consulta SQL
 if (mysqli_query($conexion, $sql)) {

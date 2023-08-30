@@ -58,9 +58,9 @@ if ($varsesion == null || $varsesion = '') {
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="dropdown-a" data-toggle="dropdown">Personal</a>
               <div class="dropdown-menu" aria-labelledby="dropdown-a">
-                <a class="dropdown-item" href="reservation.html">Lista de usuarios</a>
-                <a class="dropdown-item" href="stuff.html">Registrar</a>
-                <a class="dropdown-item" href="gallery.html">Galeria</a>
+                <a class="dropdown-item" href="/paginawebrestaurante/administrador/listado.php">Lista de personal</a>
+                <a class="dropdown-item" href="/paginawebrestaurante/administrador/agregar.php">Registrar</a>
+                <a class="dropdown-item" href="">Galeria</a>
               </div>
             </li>
             <li class="nav-item"><a class="nav-link" href="contact.html">Cerrar Sesion</a></li>
@@ -75,7 +75,7 @@ if ($varsesion == null || $varsesion = '') {
         <div class="row">
           <div class="col-lg-6 col-md-6 col-sm-12 text-center">
             <div class="inner-column">
-              <h1>Bienvenido <span>Administrador</span></h1>
+              <h1>Bienvenido <span>Administrador@</span></h1>
               <!--<h4>Little Story</h4>
               <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque auctor suscipit feugiat. Ut at
                 pellentesque ante, sed convallis arcu. Nullam facilisis, eros in eleifend luctus, odio ante sodales

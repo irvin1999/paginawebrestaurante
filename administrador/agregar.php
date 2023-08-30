@@ -54,14 +54,15 @@ if ($varsesion == null || $varsesion = '') {
         </button>
         <div class="collapse navbar-collapse" id="navbars-rs-food">
           <ul class="navbar-nav ml-auto">
-            <li class="nav-item active"><a class="nav-link" href="index.html">Inicio</a></li>
+            <li class="nav-item"><a class="nav-link"
+                href="/paginawebrestaurante/administrador/inicio.php">Inicio</a></li>
             <li class="nav-item"><a class="nav-link" href="menu.html">Menu</a></li>
             <li class="nav-item"><a class="nav-link" href="about.html">Sobre Nosotros</a></li>
-            <li class="nav-item dropdown">
+            <li class="nav-item active dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="dropdown-a" data-toggle="dropdown">Personal</a>
               <div class="dropdown-menu" aria-labelledby="dropdown-a">
-                <a class="dropdown-item" href="reservation.html">Lista de usuarios</a>
-                <a class="dropdown-item" href="stuff.html">Registrar</a>
+                <a class="dropdown-item" href="/paginawebrestaurante/administrador/listado.php">Lista de usuarios</a>
+                <a class="dropdown-item active" href="/paginawebrestaurante/administrador/agregar.php">Registrar</a>
                 <a class="dropdown-item" href="gallery.html">Galeria</a>
               </div>
             </li>
@@ -71,27 +72,62 @@ if ($varsesion == null || $varsesion = '') {
       </div>
     </nav>
   </header>
+  <div class="container-fluid row">
+    <form action="#" method="post" class="col-4 p-5">
+      <h1 class="text-center p-3">Agregar Usuario</h1>
+      <label for="nombre">Nombre:</label>
+      <input type="text" id="nombre" name="nombre" required>
 
-  
-  <form action="#" method="post">
-  <h1>Agregar Usuario</h1>
-    <label for="nombre">Nombre:</label>
-    <input type="text" id="nombre" name="nombre" required>
+      <label for="apellido">Apellido:</label>
+      <input type="text" id="apellido" name="apellido" required>
 
-    <label for="apellido">Apellido:</label>
-    <input type="text" id="apellido" name="apellido" required>
+      <label for="rol">Rol:</label>
+      <select id="rol" name="rol">
+        <option value="camarero">Administrador</option>
+        <option value="cocinero">Camarero</option>
+        <option value="cocinero">Cocinero</option>
+      </select>
 
-    <label for="rol">Rol:</label>
-    <select id="rol" name="rol">
-      <option value="camarero">Camarero</option>
-      <option value="cocinero">Cocinero</option>
-    </select>
+      <label for="contraseña">Contraseña:</label>
+      <input type="password" id="contraseña" name="contraseña" required>
 
-    <label for="contraseña">Contraseña:</label>
-    <input type="password" id="contraseña" name="contraseña" required>
-
-    <input type="submit" value="Agregar Usuario">
-  </form>
+      <input type="submit" value="Agregar Usuario">
+    </form>
+    <div class="col-8 p-5">
+    <br></br>
+    <h1 class="text-center p-3">Lista de trabajadores</h1>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">First</th>
+          <th scope="col">Last</th>
+          <th scope="col">Handle</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">1</th>
+          <td>Mark</td>
+          <td>Otto</td>
+          <td>@mdo</td>
+        </tr>
+        <tr>
+          <th scope="row">2</th>
+          <td>Jacob</td>
+          <td>Thornton</td>
+          <td>@fat</td>
+        </tr>
+        <tr>
+          <th scope="row">3</th>
+          <td>Larry</td>
+          <td>the Bird</td>
+          <td>@twitter</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
 
   <script src="../js2/jquery-3.2.1.min.js"></script>
   <script src="../js2/popper.min.js"></script>
