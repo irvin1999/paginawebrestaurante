@@ -5,7 +5,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = md5($_POST["passw"]);
 
     // Conexión a la base de datos
-    $conexion = mysqli_connect("localhost", "root", "", "restaurante");
+    $conexion = mysqli_connect("localhost:3307", "root", "Alberto321", "restaurante");
 
     // Verificar la conexión
     if (!$conexion) {
