@@ -74,7 +74,7 @@ if ($varsesion == null || $varsesion = '') {
   </header>
   <div class="container-fluid row">
     <form action="#" method="post" class="col-4 p-5">
-      <h1 class="text-center p-3">Agregar Usuario</h1>
+      <h1 class="text-center p-3">Agregar Personal</h1>
       <label for="nombre">Nombre:</label>
       <input type="text" id="nombre" name="nombre" required>
 
