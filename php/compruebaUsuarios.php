@@ -25,6 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $password_encriptada = $fila["contrasena"];
         $idusuario = $fila["id"];
         $id_cargo = $fila["rol"]; // Agregamos el campo del cargo del usuario
+        $root_path = $_SERVER['DOCUMENT_ROOT'] . '/paginawebrestaurante/';
 
         // Comprobar si la contraseña es correcta
         if ($password_encriptada == $password) {
@@ -33,6 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION["idusuario"] = $idusuario;
             $_SESSION["usuario"] = $usuario;
             $_SESSION["nombre"] = $nombre;
+            $_SESSION["rol"] = $id_cargo; // Agregamos el rol a la sesión
 
             if ($id_cargo == 1) {
                 header("location: /paginawebrestaurante/administrador/inicio.php");

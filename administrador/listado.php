@@ -54,19 +54,33 @@ if ($varsesion == null || $varsesion = '') {
                 </button>
                 <div class="collapse navbar-collapse" id="navbars-rs-food">
                     <ul class="navbar-nav ml-auto">
-                        <li class="nav-item"><a class="nav-link" href="/paginawebrestaurante/administrador/inicio.php">Inicio</a></li>
-                        <li class="nav-item"><a class="nav-link" href="menu.html">Menu</a></li>
-                        <li class="nav-item"><a class="nav-link" href="about.html">Sobre Nosotros</a></li>
+                        <li class="nav-item"><a class="nav-link"
+                                href="/paginawebrestaurante/administrador/inicio.php">Inicio</a></li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="dropdown-a"
                                 data-toggle="dropdown">Personal</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown-a">
-                                <a class="dropdown-item active" href="/paginawebrestaurante/administrador/listado.php">Lista de usuarios</a>
-                                <a class="dropdown-item" href="/paginawebrestaurante/administrador/agregar.php">Registrar</a>
-                                <a class="dropdown-item" href="gallery.html">Galeria</a>
+                                <a class="dropdown-item active"
+                                    href="/paginawebrestaurante/administrador/listado.php">Lista de usuarios</a>
+                                <a class="dropdown-item"
+                                    href="/paginawebrestaurante/administrador/agregar.php">Registrar</a>
                             </div>
                         </li>
-                        <li class="nav-item"><a class="nav-link" href="contact.html">Cerrar Sesion</a></li>
+                        <li>
+                            <?php
+                            date_default_timezone_set('Europe/Madrid');
+                            session_start();
+                            if (isset($_SESSION['usuario'])) {
+                                echo '<a class="nav-link" href="/paginawebrestaurante/php/cerrarsesion.php">Cerrar sesión</a>';
+                                echo '<li class="nav-link">';
+                                echo 'Nombre:   ';
+                                echo $_SESSION['nombre'] . "<br> ";
+                                echo 'Rol:   ';
+                                echo $_SESSION['rol'];
+                                echo '</li>';
+                            }
+                            ?>
+                        </li>
                     </ul>
                 </div>
             </div>
