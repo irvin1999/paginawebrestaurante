@@ -57,6 +57,8 @@ if ($varsesion == null || $varsesion = '') {
           <ul class="navbar-nav ml-auto">
             <li class="nav-item"><a class="nav-link" href="/paginawebrestaurante/administrador/inicio.php">Inicio</a>
             </li>
+            <li class="nav-item"><a class="nav-link" href="#">Menu</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Sobre Nosotros</a></li>
             <li class="nav-item active dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="dropdown-a" data-toggle="dropdown">Personal</a>
               <div class="dropdown-menu" aria-labelledby="dropdown-a">

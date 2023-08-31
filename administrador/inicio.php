@@ -53,6 +53,8 @@ if ($varsesion == null || $varsesion = '') {
         <div class="collapse navbar-collapse" id="navbars-rs-food">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item active"><a class="nav-link" href="/paginawebrestaurante/administrador/inicio.php">Inicio</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Menu</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Sobre Nosotros</a></li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="dropdown-a" data-toggle="dropdown">Personal</a>
               <div class="dropdown-menu" aria-labelledby="dropdown-a">
