@@ -38,6 +38,7 @@ if ($varsesion == null || $varsesion = '') {
   <link rel="stylesheet" href="/paginawebrestaurante/css2/custom.css">
 
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="/paginawebrestaurante/css/tabla.css">
 
 </head>
 
@@ -54,8 +55,8 @@ if ($varsesion == null || $varsesion = '') {
         </button>
         <div class="collapse navbar-collapse" id="navbars-rs-food">
           <ul class="navbar-nav ml-auto">
-            <li class="nav-item"><a class="nav-link"
-                href="/paginawebrestaurante/administrador/inicio.php">Inicio</a></li>
+            <li class="nav-item"><a class="nav-link" href="/paginawebrestaurante/administrador/inicio.php">Inicio</a>
+            </li>
             <li class="nav-item"><a class="nav-link" href="menu.html">Menu</a></li>
             <li class="nav-item"><a class="nav-link" href="about.html">Sobre Nosotros</a></li>
             <li class="nav-item active dropdown">
@@ -73,7 +74,7 @@ if ($varsesion == null || $varsesion = '') {
     </nav>
   </header>
   <div class="container-fluid row">
-    <form action="./php/crearUser.php" method="post" class="col-4 p-5">
+    <form action="../php/crearUser.php" method="post" class="col-4 p-5">
       <h1 class="text-center p-3">Agregar Personal</h1>
       <label for="nombre">Nombre:</label>
       <input type="text" id="nombre" name="nombre" required>
@@ -83,9 +84,9 @@ if ($varsesion == null || $varsesion = '') {
 
       <label for="rol">Rol:</label>
       <select id="rol" name="rol">
-        <option value="camarero">Administrador</option>
-        <option value="cocinero">Camarero</option>
-        <option value="cocinero">Cocinero</option>
+        <option value="1">Administrador</option>
+        <option value="2">Camarero</option>
+        <option value="3">Cocinero</option>
       </select>
 
       <label for="contraseña">Contraseña:</label>
@@ -93,40 +94,70 @@ if ($varsesion == null || $varsesion = '') {
 
       <input type="submit" value="Agregar Usuario">
     </form>
+    <?php
+    // Establecer la conexión con la base de datos
+    $conexion = mysqli_connect("localhost", "root", "", "restaurante");
+
+    // Comprobar si la conexión es exitosa
+    if (!$conexion) {
+      die("Error al conectar a la base de datos: " . mysqli_connect_error());
+    }
+
+    // Crear la consulta SQL para obtener los usuarios y sus roles
+    $sql = "SELECT usuarios.id, usuarios.nombre, usuarios.apellido, cargo.nombre AS rol_nombre
+        FROM usuarios
+        INNER JOIN cargo ON usuarios.rol = cargo.id_cargo";
+
+    // Ejecutar la consulta SQL
+    $resultado = mysqli_query($conexion, $sql);
+    ?>
+
     <div class="col-8 p-5">
-    <br></br>
-    <h1 class="text-center p-3">Lista de trabajadores</h1>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">First</th>
-          <th scope="col">Last</th>
-          <th scope="col">Handle</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th scope="row">1</th>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
-        </tr>
-        <tr>
-          <th scope="row">2</th>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>@fat</td>
-        </tr>
-        <tr>
-          <th scope="row">3</th>
-          <td>Larry</td>
-          <td>the Bird</td>
-          <td>@twitter</td>
-        </tr>
-      </tbody>
-    </table>
+      <br>
+      <h1 class="text-center p-3">Lista de trabajadores</h1>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Apellido</th>
+            <th scope="col">Rol</th>
+            <th scope="col">Acciones</th>
+            <th scope="col">Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+          while ($fila = mysqli_fetch_assoc($resultado)) {
+            echo "<tr>";
+            echo "<th scope='row'>" . $fila['id'] . "</th>";
+            echo "<td>" . $fila['nombre'] . "</td>";
+            echo "<td>" . $fila['apellido'] . "</td>";
+            echo "<td>" . $fila['rol_nombre'] . "</td>";
+
+            // Botones de modificar y eliminar
+            echo "<td>";
+            echo "<a href='#'><img src='../images/modificar.png' alt='Modificar'></a> ";
+            echo "<a href='#'><img src='../images/eliminar.png' alt='Eliminar'></a>";
+            echo "</td>";
+
+            // Lógica para mostrar punto verde (activo) o rojo (inactivo)
+            $estadoPunto = ($fila['activo'] == 1) ? '<span class="dot dot-green"></span>' : '<span class="dot dot-red"></span>';
+            $estadoTexto = ($fila['activo'] == 1) ? 'Activo' : 'Inactivo';
+            echo "<td>$estadoPunto $estadoTexto</td>";
+
+            echo "</tr>";
+
+          }
+          ?>
+        </tbody>
+      </table>
     </div>
+
+    <?php
+    // Cerrar la conexión con la base de datos
+    mysqli_close($conexion);
+    ?>
   </div>
 
   <script src="../js2/jquery-3.2.1.min.js"></script>

@@ -5,7 +5,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = md5($_POST["passw"]);
 
     // Conexión a la base de datos
-    $conexion = mysqli_connect("localhost:3307", "root", "Alberto321", "restaurante");
+    $conexion = mysqli_connect("localhost", "root", "", "restaurante");
 
     // Verificar la conexión
     if (!$conexion) {
@@ -22,12 +22,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Obtener los datos del usuario
         $fila = mysqli_fetch_assoc($resultado);
         $nombre = $fila["nombre"];
-        $password = $fila["contrasena"];
+        $password_encriptada = $fila["contrasena"];
         $idusuario = $fila["id"];
         $id_cargo = $fila["rol"]; // Agregamos el campo del cargo del usuario
 
         // Comprobar si la contraseña es correcta
-        if ($password == $password) {
+        if ($password_encriptada == $password) {
             // Iniciar sesión y redireccionar al usuario según su cargo
             session_start();
             $_SESSION["idusuario"] = $idusuario;
