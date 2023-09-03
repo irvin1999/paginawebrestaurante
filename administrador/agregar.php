@@ -136,7 +136,6 @@ if ($varsesion == null || $varsesion = '') {
             <th scope="col">Apellido</th>
             <th scope="col">Rol</th>
             <th scope="col">Acciones</th>
-            <th scope="col">Estado</th>
           </tr>
         </thead>
         <tbody>
@@ -151,14 +150,15 @@ if ($varsesion == null || $varsesion = '') {
             // Botones de modificar y eliminar
             echo "<td>";
             echo "<a href='#'><img src='../images/modificar.png' alt='Modificar'></a> ";
-            echo "<a href='#'><img src='../images/eliminar.png' alt='Eliminar'></a>";
+            echo "<a href='#' class='eliminar_usuario' data-id='" . $fila['id'] . "'><img src='../images/eliminar.png' alt='Eliminar'></a>";
+
+            if ($fila['activo'] == 1) {
+              echo "<a href='../administrador/permisos/deshabilitar_usuarios.php?id=" . $fila['id'] . "'><img src='../images/deshabilitar.png' alt='Deshabilitar'></a>";
+            } else {
+              echo "<a href='../administrador/permisos/habilitar_usuarios.php?id=" . $fila['id'] . "'><img src='../images/habilitar.png' alt='Habilitar'></a>";
+            }
+
             echo "</td>";
-
-            // Lógica para mostrar punto verde (activo) o rojo (inactivo)
-            $estadoPunto = ($fila['activo'] == 1) ? '<span class="dot dot-green"></span>' : '<span class="dot dot-red"></span>';
-            $estadoTexto = ($fila['activo'] == 1) ? 'Activo' : 'Inactivo';
-            echo "<td>$estadoPunto $estadoTexto</td>";
-
             echo "</tr>";
 
           }
@@ -166,13 +166,46 @@ if ($varsesion == null || $varsesion = '') {
         </tbody>
       </table>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        // Función para eliminar un usuario y actualizar la tabla en tiempo real
+        $(".eliminar-usuario").click(function () {
+          var idUsuario = $(this).data("id");
 
+          // Realizar una solicitud AJAX para eliminar el usuario
+          $.ajax({
+            type: "POST",
+            url: "../php/eliminar_usuario.php",
+            data: { id: idUsuario },
+            success: function (response) {
+              if (response === "success") {
+                // Eliminación exitosa, actualizar la tabla
+                actualizarTabla();
+              } else {
+                alert("Error al eliminar el usuario.");
+              }
+            },
+          });
+        });
+
+        // Función para actualizar la tabla
+        function actualizarTabla() {
+          $.ajax({
+            type: "GET",
+            url: "actualizar_tabla.php", // Crea este archivo para obtener los datos actualizados
+            success: function (data) {
+              $("#tabla-usuarios").html(data);
+            },
+          });
+        }
+      });
+    </script>
     <?php
     // Cerrar la conexión con la base de datos
     mysqli_close($conexion);
     ?>
   </div>
-
   <script src="../js2/jquery-3.2.1.min.js"></script>
   <script src="../js2/popper.min.js"></script>
   <script src="../js2/bootstrap.min.js"></script>
