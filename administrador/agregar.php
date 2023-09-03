@@ -67,8 +67,6 @@ if ($varsesion == null || $varsesion = '') {
           <ul class="navbar-nav ml-auto">
             <li class="nav-item"><a class="nav-link" href="/paginawebrestaurante/administrador/inicio.php">Inicio</a>
             </li>
-            <li class="nav-item"><a class="nav-link" href="#">Menu</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Sobre Nosotros</a></li>
             <li class="nav-item active dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="dropdown-a" data-toggle="dropdown">Personal</a>
               <div class="dropdown-menu" aria-labelledby="dropdown-a">
@@ -143,45 +141,55 @@ if ($varsesion == null || $varsesion = '') {
           </tr>
         </thead>
         <tbody>
-        <?php
-      // Obtener el ID del usuario que ha iniciado sesión desde la variable de sesión
-      $userEnSesion = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
-      $esAdminPredeterminado = verificarSiEsAdminPredeterminado(); // Debes implementar esta función
+          <?php
+          // Obtener el ID del usuario que ha iniciado sesión desde la variable de sesión
+          $userEnSesion = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+          $esAdminPredeterminado = verificarSiEsAdminPredeterminado(); // Debes implementar esta función
+          
+          while ($fila = mysqli_fetch_assoc($resultado)) {
+            echo "<tr>";
+            echo "<th scope='row'>" . $fila['id'] . "</th>";
+            echo "<td>" . $fila['nombre'] . "</td>";
+            echo "<td>" . $fila['apellido'] . "</td>";
+            echo "<td>" . $fila['rol_nombre'] . "</td>";
 
-      while ($fila = mysqli_fetch_assoc($resultado)) {
-        echo "<tr>";
-        echo "<th scope='row'>" . $fila['id'] . "</th>";
-        echo "<td>" . $fila['nombre'] . "</td>";
-        echo "<td>" . $fila['apellido'] . "</td>";
-        echo "<td>" . $fila['rol_nombre'] . "</td>";
+            // Botones de modificar y eliminar
+            echo "<td>";
 
-        // Botones de modificar y eliminar
-        echo "<td>";
+            if ($esAdminPredeterminado || $userEnSesion != $fila['id']) {
+              // Muestra el botón de eliminar solo si es el administrador predeterminado o no es el usuario en sesión
+              if ($esAdminPredeterminado || ($fila['rol_nombre'] == 'camarero' || $fila['rol_nombre'] == 'cocinero')) {
+                $btnClass = ($fila['activo'] == 1) ? 'btn-deshabilitar' : 'btn-habilitar';
+                $btnText = ($fila['activo'] == 1) ? 'Deshabilitado' : 'Habilitado';
 
-        if ($esAdminPredeterminado || $userEnSesion != $fila['id']) {
-          // Muestra el botón de eliminar solo si es el administrador predeterminado o no es el usuario en sesión
-          if ($esAdminPredeterminado || $fila['rol_nombre'] != 'administrador') {
-            $btnClass = ($fila['activo'] == 1) ? 'btn-deshabilitar' : 'btn-habilitar';
-            $btnText = ($fila['activo'] == 1) ? 'Deshabilitado' : 'Habilitado';
+                echo "<a href='#'><img src='../images/modificar.png' alt='Modificar'></a> ";
 
-            echo "<a href='#'><img src='../images/modificar.png' alt='Modificar'></a> ";
-            if ($esAdminPredeterminado) {
-              echo "<a href='../php/eliminar_usuario.php?id=" . $fila['id'] . "'><img src='../images/eliminar.png' alt='Eliminar'></a><span style='margin-right: 10px;'></span>";
+                if ($esAdminPredeterminado) {
+                  // El administrador predeterminado puede eliminar a cualquier usuario
+                  echo "<a href='../php/eliminar_usuario.php?id=" . $fila['id'] . "'><img src='../images/eliminar.png' alt='Eliminar'></a><span style='margin-right: 10px;'></span>";
+                } elseif ($_SESSION['rol'] == 'administrador') {
+                  // Verificar si el usuario en sesión es un administrador registrado en la base de datos
+                  // Mostrar el botón de eliminar solo para camareros y cocineros
+                  if ($fila['rol_nombre'] == 'camarero' || $fila['rol_nombre'] == 'cocinero') {
+                    echo "<a href='../php/eliminar_usuario.php?id=" . $fila['id'] . "'><img src='../images/eliminar.png' alt='Eliminar'></a><span style='margin-right: 10px;'></span>";
+                  }
+                }
+
+                echo "<button class='cambiar_estado $btnClass' data-id='" . $fila['id'] . "'>$btnText</button>";
+              } else {
+                // Si es un administrador, simplemente muestra un mensaje o deja el espacio en blanco
+                echo "Administrador";
+              }
+            } else {
+              // Si el usuario en sesión es el mismo que el usuario en la fila, muestra un mensaje o deja el espacio en blanco
+              echo "Tú";
             }
-            echo "<button class='cambiar_estado $btnClass' data-id='" . $fila['id'] . "'>$btnText</button>";
-          } else {
-            // Si es un administrador, simplemente muestra un mensaje o deja el espacio en blanco
-            echo "Administrador";
-          }
-        } else {
-          // Si el usuario en sesión es el mismo que el usuario en la fila, muestra un mensaje o deja el espacio en blanco
-          echo "Tú";
-        }
 
-        echo "</td>";
-        echo "</tr>";
-      }
-      ?>
+            echo "</td>";
+            echo "</tr>";
+          }
+          ?>
+
 
         </tbody>
       </table>
