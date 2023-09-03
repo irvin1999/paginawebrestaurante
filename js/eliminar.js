@@ -1,32 +1,22 @@
 $(document).ready(function () {
-    // Función para eliminar un usuario y actualizar la tabla en tiempo real
-    $(".eliminar-usuario").click(function () {
+    // Función para eliminar un usuario
+    $(".eliminar_usuario").click(function () {
         var idUsuario = $(this).data("id");
+        var btn = $(this);
 
-        // Realizar una solicitud AJAX para eliminar el usuario
+        // Realiza una solicitud AJAX para eliminar al usuario
         $.ajax({
             type: "POST",
-            url: "../php/eliminar_usuario.php",
-            data: { id: idUsuario },
+            url: "../php/eliminar_usuario.php", // Ruta al archivo PHP para eliminar usuarios
+            data: { id: idUsuario }, // Envía el ID del usuario a eliminar
             success: function (response) {
                 if (response === "success") {
-                    // Eliminación exitosa, actualizar la tabla
-                    actualizarTabla();
+                    // Eliminación exitosa: elimina la fila de la tabla
+                    btn.closest("tr").remove();
                 } else {
                     alert("Error al eliminar el usuario.");
                 }
             },
         });
     });
-
-    // Función para actualizar la tabla
-    function actualizarTabla() {
-        $.ajax({
-            type: "GET",
-            url: "actualizar_tabla.php", // Crea este archivo para obtener los datos actualizados
-            success: function (data) {
-                $("#tabla-usuarios").html(data);
-            },
-        });
-    }
 });

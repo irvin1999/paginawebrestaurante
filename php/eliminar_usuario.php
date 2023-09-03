@@ -1,30 +1,30 @@
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id'])) {
-    $idUsuario = $_POST['id'];
+// Incluye el archivo de conexión a la base de datos
+include('../administrador/permisos/conexion.php');
 
-    // Establecer la conexión con la base de datos
-    $conexion = mysqli_connect("localhost", "root", "", "restaurante");
+// Verifica si se recibió el ID del usuario a eliminar
+if (isset($_GET['id'])) {
+    $idUsuario = $_GET['id'];
 
-    // Comprobar si la conexión es exitosa
-    if (!$conexion) {
-        die("Error al conectar a la base de datos: " . mysqli_connect_error());
-    }
-
-    // Consulta SQL para eliminar el usuario por su ID
+    // Consulta SQL para eliminar al usuario por su ID
     $sql = "DELETE FROM usuarios WHERE id = $idUsuario";
 
-    // Ejecutar la consulta SQL
-    $resultado = mysqli_query($conexion, $sql);
-
-    if ($resultado) {
-        echo "success"; // Respuesta de éxito
+    if (mysqli_query($conexion, $sql)) {
+        // Éxito: Usuario eliminado correctamente
+        header("Location: ../administrador/agregar.php"); // Redirige de nuevo a la lista de usuarios
+        exit;
     } else {
-        echo "error"; // Respuesta de error
+        // Error: No se pudo eliminar al usuario
+        echo "Error al eliminar el usuario: " . mysqli_error($conexion);
     }
-
-    // Cerrar la conexión con la base de datos
-    mysqli_close($conexion);
 } else {
-    echo "No se proporcionó un ID de usuario válido.";
+    // Error: No se proporcionó el ID del usuario a eliminar
+    echo "ID de usuario no proporcionado.";
 }
+
+// Cierra la conexión a la base de datos
+mysqli_close($conexion);
 ?>
+
+header("Location: ../administrador/agregar.php"); // Redirige de nuevo a la lista de usuarios
+        exit;

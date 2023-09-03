@@ -88,7 +88,9 @@ if ($varsesion == null || $varsesion = '') {
             </div>
         </nav>
     </header>
-
+<?php
+include('permisos/conexion.php');
+?>
     <table class="table table-striped">
         <thead>
             <tr>

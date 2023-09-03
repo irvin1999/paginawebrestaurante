@@ -15,6 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION["usuario"] = $usuario;
         $_SESSION["nombre"] = "Administrador";
         $_SESSION["rol"] = "administrador"; // El nombre del cargo para el administrador
+        $_SESSION["es_admin_predeterminado"] = true;
         header("location: /paginawebrestaurante/administrador/inicio.php");
         exit;
     }

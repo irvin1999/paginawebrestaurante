@@ -1,4 +1,13 @@
 <?php
+function verificarSiEsAdminPredeterminado()
+{
+  // Verificar si el usuario es el administrador predeterminado
+  if (isset($_SESSION["usuario"]) && $_SESSION["usuario"] == "admin" && isset($_SESSION["es_admin_predeterminado"]) && $_SESSION["es_admin_predeterminado"]) {
+    return true;
+  }
+
+  return false;
+}
 session_start();
 error_reporting(0);
 $varsesion = $_SESSION['usuario'];
@@ -19,7 +28,7 @@ if ($varsesion == null || $varsesion = '') {
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- Site Metas -->
-  <title>Live Dinner Restaurant - Responsive HTML5 Template</title>
+  <title>Empresa</title>
   <meta name="keywords" content="">
   <meta name="description" content="">
   <meta name="author" content="">
@@ -38,6 +47,7 @@ if ($varsesion == null || $varsesion = '') {
   <link rel="stylesheet" href="/paginawebrestaurante/css2/custom.css">
 
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="permisos/estado.css">
   <link rel="stylesheet" href="/paginawebrestaurante/css/tabla.css">
 
 </head>
@@ -108,13 +118,7 @@ if ($varsesion == null || $varsesion = '') {
       <input type="submit" value="Agregar Usuario">
     </form>
     <?php
-    // Establecer la conexión con la base de datos
-    $conexion = mysqli_connect("localhost", "root", "", "restaurante");
-
-    // Comprobar si la conexión es exitosa
-    if (!$conexion) {
-      die("Error al conectar a la base de datos: " . mysqli_connect_error());
-    }
+    include('permisos/conexion.php');
 
     // Crear la consulta SQL para obtener los usuarios y sus roles
     $sql = "SELECT usuarios.id, usuarios.nombre, usuarios.apellido, cargo.nombre AS rol_nombre
@@ -139,66 +143,77 @@ if ($varsesion == null || $varsesion = '') {
           </tr>
         </thead>
         <tbody>
-          <?php
-          while ($fila = mysqli_fetch_assoc($resultado)) {
-            echo "<tr>";
-            echo "<th scope='row'>" . $fila['id'] . "</th>";
-            echo "<td>" . $fila['nombre'] . "</td>";
-            echo "<td>" . $fila['apellido'] . "</td>";
-            echo "<td>" . $fila['rol_nombre'] . "</td>";
+        <?php
+      // Obtener el ID del usuario que ha iniciado sesión desde la variable de sesión
+      $userEnSesion = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+      $esAdminPredeterminado = verificarSiEsAdminPredeterminado(); // Debes implementar esta función
 
-            // Botones de modificar y eliminar
-            echo "<td>";
+      while ($fila = mysqli_fetch_assoc($resultado)) {
+        echo "<tr>";
+        echo "<th scope='row'>" . $fila['id'] . "</th>";
+        echo "<td>" . $fila['nombre'] . "</td>";
+        echo "<td>" . $fila['apellido'] . "</td>";
+        echo "<td>" . $fila['rol_nombre'] . "</td>";
+
+        // Botones de modificar y eliminar
+        echo "<td>";
+
+        if ($esAdminPredeterminado || $userEnSesion != $fila['id']) {
+          // Muestra el botón de eliminar solo si es el administrador predeterminado o no es el usuario en sesión
+          if ($esAdminPredeterminado || $fila['rol_nombre'] != 'administrador') {
+            $btnClass = ($fila['activo'] == 1) ? 'btn-deshabilitar' : 'btn-habilitar';
+            $btnText = ($fila['activo'] == 1) ? 'Deshabilitado' : 'Habilitado';
+
             echo "<a href='#'><img src='../images/modificar.png' alt='Modificar'></a> ";
-            echo "<a href='#' class='eliminar_usuario' data-id='" . $fila['id'] . "'><img src='../images/eliminar.png' alt='Eliminar'></a>";
-
-            if ($fila['activo'] == 1) {
-              echo "<a href='../administrador/permisos/deshabilitar_usuarios.php?id=" . $fila['id'] . "'><img src='../images/deshabilitar.png' alt='Deshabilitar'></a>";
-            } else {
-              echo "<a href='../administrador/permisos/habilitar_usuarios.php?id=" . $fila['id'] . "'><img src='../images/habilitar.png' alt='Habilitar'></a>";
+            if ($esAdminPredeterminado) {
+              echo "<a href='../php/eliminar_usuario.php?id=" . $fila['id'] . "'><img src='../images/eliminar.png' alt='Eliminar'></a><span style='margin-right: 10px;'></span>";
             }
-
-            echo "</td>";
-            echo "</tr>";
-
+            echo "<button class='cambiar_estado $btnClass' data-id='" . $fila['id'] . "'>$btnText</button>";
+          } else {
+            // Si es un administrador, simplemente muestra un mensaje o deja el espacio en blanco
+            echo "Administrador";
           }
-          ?>
+        } else {
+          // Si el usuario en sesión es el mismo que el usuario en la fila, muestra un mensaje o deja el espacio en blanco
+          echo "Tú";
+        }
+
+        echo "</td>";
+        echo "</tr>";
+      }
+      ?>
+
         </tbody>
       </table>
     </div>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
       $(document).ready(function () {
-        // Función para eliminar un usuario y actualizar la tabla en tiempo real
-        $(".eliminar-usuario").click(function () {
+        // Función para cambiar el estado (habilitar/deshabilitar) y el color del botón
+        $(".cambiar_estado").click(function () {
           var idUsuario = $(this).data("id");
+          var btn = $(this);
 
-          // Realizar una solicitud AJAX para eliminar el usuario
+          // Realizar una solicitud AJAX para cambiar el estado
           $.ajax({
             type: "POST",
-            url: "../php/eliminar_usuario.php",
+            url: "../administrador/permisos/estado_usuarios.php",
             data: { id: idUsuario },
             success: function (response) {
               if (response === "success") {
-                // Eliminación exitosa, actualizar la tabla
-                actualizarTabla();
+                // Cambio de estado exitoso, actualizar el botón y su estilo
+                if (btn.hasClass("btn-habilitar")) {
+                  btn.removeClass("btn-habilitar").addClass("btn-deshabilitar").text("Deshabilitado");
+                } else {
+                  btn.removeClass("btn-deshabilitar").addClass("btn-habilitar").text("Habilitado");
+                }
               } else {
-                alert("Error al eliminar el usuario.");
+                alert("Error al cambiar el estado del usuario.");
               }
             },
           });
         });
-
-        // Función para actualizar la tabla
-        function actualizarTabla() {
-          $.ajax({
-            type: "GET",
-            url: "actualizar_tabla.php", // Crea este archivo para obtener los datos actualizados
-            success: function (data) {
-              $("#tabla-usuarios").html(data);
-            },
-          });
-        }
       });
     </script>
     <?php
