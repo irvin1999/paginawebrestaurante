@@ -1,7 +1,7 @@
 <?php
 date_default_timezone_set('Europe/Madrid');
 // Establecer la conexión con la base de datos
-$conexion = mysqli_connect("localhost", "root", "", "restaurante");
+$conexion = mysqli_connect("localhost:8080", "root", "Alberto321", "restaurante");
 
 // Comprobar si la conexión es exitosa
 if (!$conexion) {
